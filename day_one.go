@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -25,6 +24,5 @@ func SumOfFuelRequirements() (int, error) {
 }
 
 func getModuleMass(module int) int {
-	roundedMass := math.Floor(float64(module / 3))
-	return int(roundedMass) - 2
+	return module/3 - 2
 }
