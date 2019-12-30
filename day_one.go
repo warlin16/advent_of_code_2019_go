@@ -19,6 +19,8 @@ func SumOfFuelRequirements() (int, error) {
 	for _, ele := range modules {
 		module, _ := strconv.Atoi(ele)
 		sum += getModuleMass(module)
+		// uncomment for day 2 answer
+		// sum += GetAbsModuleMass(module)
 	}
 	return sum, nil
 }
