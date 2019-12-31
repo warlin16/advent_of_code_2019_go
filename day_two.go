@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -19,15 +20,14 @@ func OperatingSystem() []string {
 	// codes := staticCodes
 	for i := 0; i < len(codes); i += 4 {
 		ele := codes[i]
+		if ele == "99" {
+			return codes
+		}
 		posOne, posTwo, finalPos := getNextThreeIndices(i, codes)
 		if ele == "1" {
 			codes = opcode(posOne, posTwo, finalPos, codes, 1)
-			continue
 		} else if ele == "2" {
 			codes = opcode(posOne, posTwo, finalPos, codes, 2)
-			continue
-		} else if ele == "99" {
-			return codes
 		}
 	}
 	return codes
@@ -49,4 +49,36 @@ func getNextThreeIndices(idx int, codes []string) (int, int, int) {
 	posTwo, _ := strconv.Atoi(codes[idx+2])
 	posThree, _ := strconv.Atoi(codes[idx+3])
 	return posOne, posTwo, posThree
+}
+
+// GetNounAndVerb is part 2 of the puzzle
+func GetNounAndVerb() {
+	fileContents, err := ioutil.ReadFile("./txt_inputs/day_two_input.txt")
+	if err != nil {
+		log.Fatal("Something went wrong reading the file", err.Error())
+	}
+	codes := strings.Split(string(fileContents), ",")
+	for noun := 0; noun < 100; noun++ {
+		for verb := 0; verb < 100; verb++ {
+			codeCopies := make([]string, len(codes))
+			copy(codeCopies, codes)
+			codeCopies[1] = strconv.Itoa(noun)
+			codeCopies[2] = strconv.Itoa(verb)
+			for i := 0; i < len(codeCopies); i += 4 {
+				ele := codeCopies[i]
+				if ele == "99" {
+					if codeCopies[0] == "19690720" {
+						fmt.Println("this is the noun and verb", noun, verb)
+					}
+					break
+				}
+				posOne, posTwo, finalPos := getNextThreeIndices(i, codeCopies)
+				if ele == "1" {
+					codeCopies = opcode(posOne, posTwo, finalPos, codeCopies, 1)
+				} else if ele == "2" {
+					codeCopies = opcode(posOne, posTwo, finalPos, codeCopies, 2)
+				}
+			}
+		}
+	}
 }
