@@ -10,13 +10,18 @@ import (
 
 // var staticCodes = []string{"1", "9", "10", "3", "2", "3", "11", "0", "99", "30", "40", "50"}
 
-// OperatingSystem is the system for our rocket ship
-func OperatingSystem() []string {
+func getCodesFromFile() []string {
 	fileContents, err := ioutil.ReadFile("./txt_inputs/day_two_input.txt")
 	if err != nil {
 		log.Fatal("Something went wrong reading the file", err.Error())
 	}
 	codes := strings.Split(string(fileContents), ",")
+	return codes
+}
+
+// OperatingSystem is the system for our rocket ship
+func OperatingSystem() []string {
+	codes := getCodesFromFile()
 	// codes := staticCodes
 	for i := 0; i < len(codes); i += 4 {
 		ele := codes[i]
@@ -53,11 +58,7 @@ func getNextThreeIndices(idx int, codes []string) (int, int, int) {
 
 // GetNounAndVerb is part 2 of the puzzle
 func GetNounAndVerb() {
-	fileContents, err := ioutil.ReadFile("./txt_inputs/day_two_input.txt")
-	if err != nil {
-		log.Fatal("Something went wrong reading the file", err.Error())
-	}
-	codes := strings.Split(string(fileContents), ",")
+	codes := getCodesFromFile()
 	for noun := 0; noun < 100; noun++ {
 		for verb := 0; verb < 100; verb++ {
 			codeCopies := make([]string, len(codes))
