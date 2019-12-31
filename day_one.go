@@ -9,7 +9,7 @@ import (
 
 // SumOfFuelRequirements gets the sum of fuel requirements
 func SumOfFuelRequirements() (int, error) {
-	fileContents, err := ioutil.ReadFile("day_one_input.txt")
+	fileContents, err := ioutil.ReadFile("./txt_inputs/day_one_input.txt")
 	if err != nil {
 		fmt.Println("File reading error", err)
 		return 0, err
