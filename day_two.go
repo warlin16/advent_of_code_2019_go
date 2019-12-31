@@ -1,39 +1,52 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"strings"
 )
 
-var staticCodes = []int{1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50}
+// var staticCodes = []string{"1", "9", "10", "3", "2", "3", "11", "0", "99", "30", "40", "50"}
 
 // OperatingSystem is the system for our rocket ship
-func OperatingSystem() {
+func OperatingSystem() []string {
 	fileContents, err := ioutil.ReadFile("./txt_inputs/day_two_input.txt")
 	if err != nil {
 		log.Fatal("Something went wrong reading the file", err.Error())
 	}
 	codes := strings.Split(string(fileContents), ",")
-	for _, ele := range codes {
-		fmt.Println("this is the current ele", ele)
-		// currentCode := strconv.Atoi(ele)
+	// codes := staticCodes
+	for i := 0; i < len(codes); i += 4 {
+		ele := codes[i]
+		posOne, posTwo, finalPos := getNextThreeIndices(i, codes)
 		if ele == "1" {
-			// do opcode 1
-			fmt.Println("to be determined")
+			codes = opcode(posOne, posTwo, finalPos, codes, 1)
+			continue
 		} else if ele == "2" {
-			// do opcode 2
-			fmt.Println("to be determined")
+			codes = opcode(posOne, posTwo, finalPos, codes, 2)
+			continue
+		} else if ele == "99" {
+			return codes
 		}
 	}
+	return codes
 }
 
-func opcodeOne(codes []int) []int {
-	// firstPos, secondPos := codes[1], codes[2]
-	// codes[3] = codes[firstPos] + codes[secondPos]
-	// return codes
+func opcode(firstCode, secondCode, position int, codes []string, code int) []string {
+	firstVal, _ := strconv.Atoi(codes[firstCode])
+	secondVal, _ := strconv.Atoi(codes[secondCode])
+	if code == 1 {
+		codes[position] = strconv.Itoa(firstVal + secondVal)
+	} else {
+		codes[position] = strconv.Itoa(firstVal * secondVal)
+	}
+	return codes
 }
 
-func opcodeTwo(codes []int) []int {
+func getNextThreeIndices(idx int, codes []string) (int, int, int) {
+	posOne, _ := strconv.Atoi(codes[idx+1])
+	posTwo, _ := strconv.Atoi(codes[idx+2])
+	posThree, _ := strconv.Atoi(codes[idx+3])
+	return posOne, posTwo, posThree
 }
