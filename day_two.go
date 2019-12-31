@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-// var staticCodes = []string{"1", "9", "10", "3", "2", "3", "11", "0", "99", "30", "40", "50"}
-
 func getCodesFromFile() []string {
 	fileContents, err := ioutil.ReadFile("./txt_inputs/day_two_input.txt")
 	if err != nil {
@@ -19,41 +17,32 @@ func getCodesFromFile() []string {
 	return codes
 }
 
-// OperatingSystem is the system for our rocket ship
-func OperatingSystem() []string {
-	codes := getCodesFromFile()
-	// codes := staticCodes
+func intCodeParser(codes []string) []string {
 	for i := 0; i < len(codes); i += 4 {
 		ele := codes[i]
 		if ele == "99" {
-			return codes
+			break
 		}
-		posOne, posTwo, finalPos := getNextThreeIndices(i, codes)
+		posOne, _ := strconv.Atoi(codes[i+1])
+		posTwo, _ := strconv.Atoi(codes[i+2])
+		finalPos, _ := strconv.Atoi(codes[i+3])
+		firstVal, _ := strconv.Atoi(codes[posOne])
+		secondVal, _ := strconv.Atoi(codes[posTwo])
 		if ele == "1" {
-			codes = opcode(posOne, posTwo, finalPos, codes, 1)
+			codes[finalPos] = strconv.Itoa(firstVal + secondVal)
 		} else if ele == "2" {
-			codes = opcode(posOne, posTwo, finalPos, codes, 2)
+			codes[finalPos] = strconv.Itoa(firstVal * secondVal)
 		}
 	}
 	return codes
 }
 
-func opcode(firstCode, secondCode, position int, codes []string, code int) []string {
-	firstVal, _ := strconv.Atoi(codes[firstCode])
-	secondVal, _ := strconv.Atoi(codes[secondCode])
-	if code == 1 {
-		codes[position] = strconv.Itoa(firstVal + secondVal)
-	} else {
-		codes[position] = strconv.Itoa(firstVal * secondVal)
-	}
-	return codes
-}
-
-func getNextThreeIndices(idx int, codes []string) (int, int, int) {
-	posOne, _ := strconv.Atoi(codes[idx+1])
-	posTwo, _ := strconv.Atoi(codes[idx+2])
-	posThree, _ := strconv.Atoi(codes[idx+3])
-	return posOne, posTwo, posThree
+// OperatingSystem is the system for our rocket ship part 1 of the puzzle
+func OperatingSystem() []string {
+	codes := getCodesFromFile()
+	codes[1] = "12"
+	codes[2] = "2"
+	return intCodeParser(codes)
 }
 
 // GetNounAndVerb is part 2 of the puzzle
@@ -65,20 +54,9 @@ func GetNounAndVerb() {
 			copy(codeCopies, codes)
 			codeCopies[1] = strconv.Itoa(noun)
 			codeCopies[2] = strconv.Itoa(verb)
-			for i := 0; i < len(codeCopies); i += 4 {
-				ele := codeCopies[i]
-				if ele == "99" {
-					if codeCopies[0] == "19690720" {
-						fmt.Println("this is the noun and verb", noun, verb)
-					}
-					break
-				}
-				posOne, posTwo, finalPos := getNextThreeIndices(i, codeCopies)
-				if ele == "1" {
-					codeCopies = opcode(posOne, posTwo, finalPos, codeCopies, 1)
-				} else if ele == "2" {
-					codeCopies = opcode(posOne, posTwo, finalPos, codeCopies, 2)
-				}
+			codeCopies = intCodeParser(codeCopies)
+			if codeCopies[0] == "19690720" {
+				fmt.Println("the noun and verb are:", noun, verb)
 			}
 		}
 	}
